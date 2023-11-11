@@ -1,0 +1,10 @@
+Flask == 2.0.1
+Flask-SQLAlchemy
+requests
+pandas
+xmltodict
+datetime
+json
+pathlib
+jdatetime
+numpy

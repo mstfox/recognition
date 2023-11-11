@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Upload Excel Files</title>
+	{% include 'bootstrap.html' %}
+	{% include 'styleoption.html' %}
+</head>
+
+
+<body>
+	{% include 'nav.html' %}
+	{% include 'bannerCC.html' %}
+
+	<div class= 'container'>
+
+    <h1>Difference Module</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="input-group mb-3">
+            <input type="file" class="form-control" name="file1" ID = 'file1' accept='.xlsx'>
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="file" class="form-control" name="file2" ID = 'file2' accept='.xlsx'>
+        </div>
+
+        <input type="submit"  class="btn-outline-info form-control" value="Submit">
+    </form>
+    <div class= 'container'>
+        {% if success %}
+        <div class="success">Submit succeeded <span>&#10004;</span></div>
+         {% endif %}
+    </div>
+
+    <div class= 'container'>
+        <h1>Download Your File</h1>
+        <a href="{{ url_for('download_file') }}" class="btn btn-primary">Download File</a>
+
+    </div>    
+        
+	{% include 'scriptCC.html' %}
+    </div>
+</body>
+
+<footer>{% include 'footer.html' %}  </footer>
+</html>
+

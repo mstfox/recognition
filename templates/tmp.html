@@ -1,0 +1,140 @@
+<script>
+    document.getElementById('secondform').addEventListener('submit', function(event) {
+      event.preventDefault(); 
+      // Read data from the table and format it for Highcharts
+      const dataRows = document.querySelectorAll("#data-table tbody tr");
+      const data = Array.from(dataRows).map((row) => {
+        const xValue = parseFloat(row.cells[1].textContent);
+        const yValue = parseFloat(row.cells[2].textContent);
+        const label = row.cells[0].textContent;
+        return { x: xValue, y: yValue, name: label };
+      });
+    
+      // Create the scatter plot
+      Highcharts.chart("scatter-chart-container", {
+        chart: {
+          type: "scatter",
+        },
+        title: {
+          text: "Scatter Plot with Labels",
+        },
+        xAxis: {
+          title: {
+            text: "X Axis",
+          },
+        },
+        yAxis: {
+          title: {
+            text: "Y Axis",
+          },
+        },
+        tooltip: {
+          formatter: function () {
+            return "<b>" + this.point.name + "</b><br>X: " + this.point.x + ", Y: " + this.point.y;
+          },
+        },
+        series: [
+          {
+            data: data,
+          },
+        ],
+      });
+    });
+    </script>
+
+
+
+
+
+<script>
+  // Second form to Table shown
+  document.getElementById('secondform').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get the input values from the form
+    var ULAs = [];
+    var options = this.options;
+
+    for (i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.selected) {ULAs.push(option.value);      }    }
+    
+    const baseUrl = '/datatotable/';
+    const url = `${baseUrl}${encodeURIComponent(ULAs)}`;
+
+    fetch(url).then(response => response.json()).then(data => {
+      const columns = Object.keys(data.body[0]);
+      const tableHeader = columns.map(column => `<th scope="col">${column}</th>`).join('');
+
+      // Create the table body dynamically
+      const tableRows = data.body.map(rowData => {
+        const row = columns.map(column => `<td>${rowData[column]}</td>`).join('');
+        return `<tr>${row}</tr>`;
+      }).join('');
+
+      const tableHTML = `
+        <thead>
+          <tr>${tableHeader}</tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      `;
+
+      // Set the table HTML inside the table with ID 'myTable'
+      document.getElementById('myTable').innerHTML = tableHTML;
+
+      const columns1 = Object.keys(data.help[0]);
+      const tableHeader1 = columns1.map(columnt => `<th scope="col">${columnt}</th>`).join('');
+
+      // Create the table body dynamically
+      const tableRows1 = data.help.map(rowData1 => {
+        const row2 = columns1.map(column2 => `<td>${rowData1[column2]}</td>`).join('');
+        return `<tr>${row2}</tr>`;
+      }).join('');
+
+      const tableHTML2 = `
+        <thead>
+          <tr>${tableHeader1}</tr>
+        </thead>
+        <tbody>
+          ${tableRows1}
+        </tbody>
+      `;
+
+      // Set the table HTML inside the table with ID 'myTable'
+      document.getElementById('data-table').innerHTML = tableHTML2;
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+
+const dataRows = document.querySelectorAll("#data-table tbody tr");
+      const dataQ = Array.from(dataRows).map((row) => {
+        const xValueQ = parseFloat(row.cells[1].textContent);
+        const yValueQ = parseFloat(row.cells[2].textContent);
+        const labelQ = row.cells[0].textContent;
+        return { x: xValueQ, y: yValueQ, name: labelQ };
+      });
+    
+      // Create the scatter plot
+      Highcharts.chart("scatter-chart-container", {
+        chart:   {  type: "scatter",       zoomType: 'xy' },
+        legend:  {enabled: false,},
+        title:   {  text: "Max. Annual Return vs. Days to Maturity",                 },
+        xAxis:   {  title: {     text: "Days to Maturity",          },        },
+        yAxis:   {  title: {     text: "Max. Annual Return (%)",    },        },
+        plotOptions: {
+                        scatter: {  marker:  {    enabled: true,    radius: 10   },
+                                    tooltip: {    headerFormat: '<b>{point.name}</b><br/>',
+                                                  pointFormat: '{point.name}: ({point.x}, {point.y})'}  } },
+          series: [  {     data: dataQ,     },     ],
+      });
+
+
+
+
+
+                                                          })        })
+</script>
+  

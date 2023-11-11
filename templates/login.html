@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+			<div class="d-grid gap-2 col-3 mx-auto">
+				<br><br><br>
+				<form  method="POST" action="/login">
+					<label class="form-label mb-3">Login</label>
+					<div data-validate = "Username is required">
+						<input class="form-control form-control-lg" type="text" placeholder="Username"  name="username">
+					</div>
+					<br>
+					<label class="form-label mb-3">Password</label>
+					<div data-validate = "Password is required" class="mb-2">
+						<input  type="password" class="form-control" name="password" placeholder="Password">
+					</div>
+					<div >
+							<a href="{{ url_for('register')}}" class="txt1">Sign Up	</a>
+					</div>
+
+					<div >
+						<br>
+						<button class="btn btn-outline-primary mb-2">
+							Login
+						</button>
+					</div>
+				</form>
+			</div>
+
+{% endblock %}

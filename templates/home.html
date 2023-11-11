@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>MSTFOX</title>
+	{% include 'bootstrap.html' %}
+</head>
+
+<body>
+{% include 'nav.html' %}
+{% include 'banneroption.html' %}
+
+
+
+<div class="container mt-4">
+	<div class="row text-center" style="margin-bottom:32px">
+		<form method="POST">
+			<button style="width: 200 px" class="btn btn-success" type="submit">Update Data!</button>
+		</form>
+		
+		<p class = 'text-center mb-2'><b>Last Updated: {{time_}}</b></p><br>
+		{% if message %}
+			<p class = 'text-center'>{{ mesg }}</p>
+		{% endif %}
+	</div>
+	
+	
+	<div class="row text-center" style="margin-bottom:32px">
+		<div class="col-md-3 ">
+			<button class="btn btn-outline-dark">BLANK</button>
+		</div>
+		<div class="col-md-3">
+			<button class="btn btn-outline-dark" id="toggleButtonsd">Option Strategies</button>
+   			<div id="buttonGroupd" class="mt-4 hiddend">
+				<a href= "{{ url_for('CoveredCall')}}"  style="width: 120px" class="btn btn-outline-secondary mb-2"><b>Covered Call</b></a><br>
+				<a href= "{{ url_for('BullCallSpread')}}"  style="width: 120px" class="btn btn-outline-secondary mb-2"><b>Bull  Call </b></a><br>
+				<button style="width: 120px" class="btn btn-outline-secondary mb-2">Button 3</button><br>
+   			</div>
+		</div>
+		<div class="col-md-3">
+			<a href= "{{ url_for('upload_file')}}"  style="width: 120px" class="btn btn-outline-secondary mb-2"><b>Int. Module</b></a><br>
+		</div>
+		<div class="col-md-3">
+			<button class="btn btn-outline-dark">BLANK</button>
+		</div>
+	</div>
+
+</div>
+
+	{% include 'script.html' %}
+</body>
+
+<footer>{% include 'footer.html' %}  </footer>
+</html>
+

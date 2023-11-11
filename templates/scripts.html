@@ -1,0 +1,88 @@
+<script>
+    var ULA_select    = document.getElementById("ULA");
+    var option_select = document.getElementById("options");
+    var type_select   = document.getElementById("types");
+
+    var ULA_select    = document.getElementById('ULA');
+
+    function selectedOptions() { 
+            var ULAss = [];
+            var options = this.options;
+
+            for (i = 0; i < options.length; i++) {
+                var option = options[i];
+
+                if (option.selected) {
+                    ULAss.push(option.value);
+                }
+            }
+            
+            console.log(ULAss);
+            fetch('/Option/' + ULAss).then(function(response) {
+
+                    response.json().then(function(data) {
+                        var optionHTML = '';
+                        var optionHTML1 = '';
+
+                        for (var opt of data.options) {
+                            optionHTML += '<option value="' + opt + '">' + opt + '</option>';
+                            
+                        }
+
+                        for (var typ of data.types) {
+                            optionHTML1 += '<option value="' + typ + '">' + typ + '</option>';
+                        }
+
+                        option_select.innerHTML = optionHTML;
+                        type_select.innerHTML = optionHTML1;
+                    })
+
+                    });
+
+
+            }
+
+    ULA_select.addEventListener('change', selectedOptions);
+</script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script>
+
+    $(function () {
+        var data = $('#my-table tbody tr').map(function () {
+            return {
+                x: parseFloat($(this).find('td:eq(1)').text()), // X value
+                y: parseFloat($(this).find('td:eq(2)').text()), // Y value
+                name: $(this).find('td:eq(0)').text() // Label
+            };
+        }).get();
+    
+        // Create the scatter plot with Highcharts
+        $('#contUO').highcharts({
+            chart: {
+                title:{text: 'Annual Return vs. Days to Maturity'},
+                type: 'scatter',
+                zoomType: 'xy'},
+            
+            legend: {enabled: false,},
+            xAxis: {
+                title: {text: 'Days to Maturity'},},
+            yAxis: {title: {text: 'Anunalized Rate of Return %'}},
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        enabled: true,
+                        radius: 10
+                                },
+                    tooltip: {
+                        headerFormat: '<b>{point.name}</b><br/>',
+                        pointFormat: '{point.name}: ({point.x}, {point.y})'}
+                         }
+                         },
+            series: [{data: data }]
+        }); });
+</script>

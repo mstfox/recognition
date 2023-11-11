@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>MSTFOX</title>
+	{% include 'bootstrap.html' %}
+	<style>
+		#footer {
+            position: fixed;
+            padding: 10px 10px 0px 10px;
+            bottom: 0;
+            width: 100%;        }
+	</style>
+
+</head>
+<body>
+	{% include 'navbar.html' %}
+	{% include 'banner.html' %}
+	{% block content %}{% endblock %}
+</body>
+<footer>{% include 'footer.html' %}  </footer>
+
+</html>

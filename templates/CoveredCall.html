@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>MSTFOX</title>
+	{% include 'bootstrap.html' %}
+	{% include 'styleoption.html' %}
+</head>
+
+
+<body>
+	{% include 'nav.html' %}
+	{% include 'bannerCC.html' %}
+
+	<div class=	'border-bottom mb-3 container text-center'>
+		<form class = 'formD' name = 'firstForm' id="firstForm">
+			<div class="input-container">
+				<label class= 'mb-2 labelD' for="vallimit">Minimum Value of Order (Rial):</label>
+				<input oninput="addThousandSeparators(this)"  class= 'mb-2' type="text"  id="vallimit" name="vallimit" placeholder= 50,000,000>
+			</div>
+			<div class="input-container">
+				<label class= 'mb-2 labelD' for="ratio">Current Price/Strike Price (%)</label>
+				<input oninput="addThousandSeparators(this)"  class= 'mb-2' type="text" id="ratio" name="ratio" step=".01" placeholder= 90 required>
+			</div>
+			<div class="input-container">
+				<label class= 'mb-2 labelD' for="ARR">Minimum Annualized Rate of Return (%)</label>
+				<input oninput="addThousandSeparators(this)"  class= 'mb-2' type="text" id="ARR" name="ARR" placeholder= 50 required>
+			</div>
+			<div class="submit-container">
+				<input type="submit" name="firstForm" class="btn btn-primary btn-sm" value="RUN BRO!">
+			</div>
+		</form>
+	</div>
+
+
+    <div class= 'container'>
+        <div class="row text-center" style="margin-bottom:10px">
+            <div class="col-md-3 ">
+                <form method="POST" id="secondform" name = 'secondform'>
+                    <div class ='mb-2'>
+                            <label for="ULA">Underlying Asset</label>
+                            <select class="form-select" size="7" name="ULA" id="ULA" multiple="multiple">
+                                {% for symbol in ULA %}
+                                <option value="{{ symbol }}">{{ symbol }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class ='mb-2'>
+                        <label for='mdates'>Maturity Dates</label>
+                        <select class="form-select" size="3" name= 'mdates' id= 'mdates' multiple="multiple">
+                            {% for typ in mdates %}
+                            <option value="{{ typ }}">{{ typ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class ='mb-2'>
+                        <label for='options'>Available Options</label>
+                        <select class="form-select" size="8" name= 'options' id= 'options' multiple="multiple">
+                            {% for opt in options %}
+                            <option value="{{ opt }}">{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <input class="btn btn-outline-secondary" type="submit" value="Submit">
+                </form>
+            </div>
+            
+			<div class='col-md-9 d-none d-md-block'>    
+                <table  class="table table-striped table-hover table-sm" id="myTable"> </table>   
+            </div>
+
+            <div>   <table id= 'data-table'  hidden></table>          </div>
+            <div id="scatter-chart-container" class="row text-center"></div>
+        </div>
+    </div>
+    
+	{% include 'scriptCC.html' %}
+</body>
+
+<footer>{% include 'footer.html' %}  </footer>
+</html>
+

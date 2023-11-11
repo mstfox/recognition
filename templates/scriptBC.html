@@ -1,0 +1,217 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+
+
+<script>
+    var ULA_select    = document.getElementById("ULA");
+    var mdates_select   = document.getElementById("mdates");
+    var zones_select = document.getElementById("Zones");
+    
+    function selectedOptionsfirst() { 
+      var ULAss = [];
+      var options = this.options;
+      for (i = 0; i < options.length; i++) {
+          var option = options[i];
+          if (option.selected) {ULAss.push(option.value);}      }
+      console.log(ULAss);
+      fetch('/BC/' + ULAss).then(function(response) {
+        response.json().then(function(data) {
+            var optionHTML = '';
+            var optionHTML1 = '';
+
+            for (var opt of data.Zones) {
+                optionHTML += '<option value="' + opt + '">' + opt + '</option>'; }
+
+            for (var typ of data.mdates) {
+                optionHTML1 += '<option value="' + typ + '">' + typ + '</option>'; }
+
+            zones_select.innerHTML = optionHTML;
+            mdates_select.innerHTML = optionHTML1;
+        })
+});
+ }
+
+ ULA_select.addEventListener('change', selectedOptionsfirst);
+
+
+
+    function selectedOptionssecond() { 
+      var ULAsel = [];
+      for (var option of document.getElementById('ULA').options)
+        {if (option.selected) {ULAsel.push(option.value);  }}
+      
+      var options = this.options;
+      mdatess = []
+      for (i = 0; i < options.length; i++) {
+          var option = options[i];
+
+          if (option.selected) {
+            mdatess.push(option.value);
+          }}
+            
+      console.log(mdatess);
+      fetch('/BC/' + ULAsel +'/'+ mdatess).then(function(response) {
+          response.json().then(function(data) {
+            var optionHTML = ''
+            for (var opt of data.Zones) {
+                optionHTML += '<option value="' + opt + '">' + opt + '</option>';}
+      zones_select.innerHTML = optionHTML;})
+    });
+   }
+
+   mdates_select.addEventListener('change', selectedOptionssecond);
+
+</script>
+
+<script>
+    function addThousandSeparators(inputElement) {
+      let value = inputElement.value.replace(/\D/g, '');
+      inputElement.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+</script>
+
+
+<script>
+    // JavaScript code to handle form submission and dynamic form building
+    document.getElementById('1stForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get the input values from the form
+      const vallimitValue = document.getElementById('vallimit').value;
+      const ARRValue = document.getElementById('ARR').value;
+
+      var ULA_select    = document.getElementById("ULA");
+      var mdates_select   = document.getElementById("mdates");
+      var zones_select = document.getElementById("Zones");
+      
+      
+      const baseUrl = '/firstformbullcall/';
+      const url = `${baseUrl}${encodeURIComponent(vallimitValue)}&${encodeURIComponent(ARRValue)}`;
+
+      fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var opt0 = '';
+        var opt1 = '';
+        var opt2 = '';
+
+        for (var opt of data.ULA_) {
+          opt0 += '<option value="' + opt + '">' + opt + '</option>';
+            
+        }
+
+        for (var optn of data.mdates_) {
+          opt1 += '<option value="' + optn + '">' + optn + '</option>';
+        }
+
+        for (var mat of data.Zones_) {
+          opt2 += '<option value="' + mat + '">' + mat + '</option>';
+        }
+
+        ULA_select.innerHTML    = opt0;
+        mdates_select.innerHTML = opt1;
+        zones_select.innerHTML   = opt2;
+      })
+
+    });
+  </script>
+
+
+<script>
+  // Second form to Table shown
+  document.getElementById('2ndform').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get the ULA values from the form
+    var ULAs = [];
+    var options = this.ULA;
+
+    for (i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.selected) {ULAs.push(option.value);      }    }
+
+    // Get the mdates values from the form
+    var mdatesP = [];
+    var options = this.mdates;
+
+    for (i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.selected) {mdatesP.push(option.value);      }    }
+
+    // Get the Zones values from the form
+    var ZonesP = [];
+    var options = this.Zones;
+
+    for (i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.selected) {ZonesP.push(option.value);      }    }
+
+    
+    
+    const baseUrl = '/datatotableBC/';
+    const url = `${baseUrl}${encodeURIComponent(ULAs)}&${encodeURIComponent(mdatesP)}&${encodeURIComponent(ZonesP)}`;
+
+    fetch(url).then(response => response.json()).then(data => {
+      const columns = data.columns;
+
+      const tableHeader = columns.map(column => `<th scope="col">${column}</th>`).join('');
+
+      // Create the table body dynamically
+      const tableRows = data.body.map(rowData => {
+        const row = columns.map(column => `<td>${rowData[column]}</td>`).join('');
+        return `<tr>${row}</tr>`;
+      }).join('');
+
+      const tableHTML = `
+        <thead>
+          <tr>${tableHeader}</tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      `;
+
+      // Set the table HTML inside the table with ID 'myTable'
+      document.getElementById('myTable').innerHTML = tableHTML;
+
+                                                          })        })
+</script>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#runButton').on('click', function() {
+            $.ajax({
+                url: '/update_core',
+                type: 'POST',
+                success: function(response) {
+                    $('#result').text(response.result);
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#BullCallbtn').on('click', function() {
+          $.ajax({
+              url: '/update_bullcall',
+              type: 'POST',
+              success: function(response) {
+                  $('#resultBC').text(response.result);
+              },
+              error: function(error) {
+                  console.log('Error:', error);
+              }
+          });
+      });
+  });
+</script>
+
+

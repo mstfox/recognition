@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Options</title>
+    {% include 'bootstrap.html' %}
+</head>
+
+<body>
+    {% include 'nav.html' %}
+    
+    <br><br><br>
+    <div class= 'container'>
+        <div class="row text-center" style="margin-bottom:32px">
+            <div class="col-md-3 ">
+                <form method="POST">
+                    <div class ='mb-2'>
+                            <label for="ULA">Underlying Asset</label>
+                            <select class="form-select" size="5" name="ULA" id="ULA" multiple="multiple">
+                                {% for symbol in ULA %}
+                                <option value="{{ symbol }}">{{ symbol }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class ='mb-2'>
+                        <label for='options'>Available Options</label>
+                        <select class="form-select" size="8" name= 'options' id= 'options' multiple="multiple">
+                            {% for opt in options %}
+                            <option value="{{ opt }}">{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class ='mb-2'>
+                        <label for='types'>Types of Options</label>
+                        <select class="form-select" size="3" name= 'types' id= 'types' multiple="multiple">
+                            {% for typ in types %}
+                            <option value="{{ typ }}">{{ typ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+                    <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class='col-md-9 d-none d-md-block'>    
+                <table  id="myTable" class= "table table-hover table-sm" width="100%">
+                    <thead>
+                        <tr>
+                            {% for column in data.columns %}
+                            <th scope="col">{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data.values %}
+                        <tr style="text-align:center">
+                            {% for cell in row %}
+                            <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>     
+            </div>
+            
+            
+            <div>
+                <table id="my-table"  hidden> 
+                    <thead>
+                        <tr>
+                            {% for column in datatbl.columns %}
+                            <th scope="col">{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in datatbl.values %}
+                        <tr style="text-align:center">
+                            {% for cell in row %}
+                            <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>     
+
+            </div>
+
+        </div>
+        <div id="contUO"></div>
+    </div>
+
+    {% include 'scripts.html' %}
+
+   
+</body>
+<footer>{% include 'footer.html' %}  </footer>
+</html>

@@ -1,0 +1,220 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="table.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<script>
+  var ULA_select    = document.getElementById("ULA");
+  var mdate_select   = document.getElementById("mdates");
+  var option_select = document.getElementById("options");
+  
+  function selectedOptions() { // to grab the selected indexes and fill the corresponding mdates and options
+    var ULAss = [];
+    var Items = this.options;
+    for (i = 0; i < Items.length; i++)                      {
+        var Item_ = Items[i];
+        if (Item_.selected) {ULAss.push(Item_.value);}      }
+    console.log(ULAss);
+
+    fetch('/coveredcall/' + ULAss).then(function(response) {
+      response.json().then(function(data) {
+          var optionHTML = '';
+          var optionHTML1 = '';
+
+          for (var opt of data.options) {optionHTML  += '<option value="' + opt + '">' + opt + '</option>'; }
+          for (var typ of data.mdates)  {optionHTML1 += '<option value="' + typ + '">' + typ + '</option>'; }
+
+          option_select.innerHTML = optionHTML;
+          mdate_select.innerHTML = optionHTML1;
+      }) }); }
+ULA_select.addEventListener('change', selectedOptions);
+
+
+  function selectedOptions1() { 
+    var ULAsel = [];
+    for (var option of document.getElementById('ULA').options){if (option.selected) {ULAsel.push(option.value);  }}
+    var items = this.options;
+    
+    mdatess = []
+    for (i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item.selected) {mdatess.push(item.value);    }}    
+    console.log(mdatess);
+
+    fetch('/coveredcall/' + ULAsel +'/'+ mdatess).then(function(response) {response.json().then(function(data) {
+      var optionHTML = ''
+      for (var opt of data.options) {
+          optionHTML += '<option value="' + opt + '">' + opt + '</option>';}
+    option_select.innerHTML = optionHTML;     })  });  }
+mdate_select.addEventListener('change', selectedOptions1);
+</script>
+
+<script>
+    function addThousandSeparators(inputElement)                        {
+      let value = inputElement.value.replace(/\D/g, '');
+      inputElement.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+</script>
+
+<script>
+		var toggleButtonsBtnd = document.getElementById("toggleButtonsd");
+		var buttonGroupDivd = document.getElementById("buttonGroupd");
+	
+			toggleButtonsBtnd.addEventListener("click", function() {
+		  	buttonGroupDivd.classList.toggle("hiddend");
+		  	buttonGroupDivd.classList.toggle("fade-ind");});
+</script>
+
+<script>
+    // JavaScript code to handle form submission and dynamic form building
+    document.getElementById('firstForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get the input values from the form
+      const vallimitValue = document.getElementById('vallimit').value;
+      const ratioValue = document.getElementById('ratio').value;
+      const ARRValue = document.getElementById('ARR').value;
+
+      var ULA_select    = document.getElementById("ULA");
+      var mdates_select   = document.getElementById("mdates");
+      var option_select = document.getElementById("options");
+      
+      
+      const baseUrl = '/process_form1/';
+      const url = `${baseUrl}${encodeURIComponent(vallimitValue)}&${encodeURIComponent(ratioValue)}&${encodeURIComponent(ARRValue)}`;
+
+      fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var opt0 = '';
+        var opt1 = '';
+        var opt2 = '';
+
+        for (var opt of data.ULA_) {
+          opt0 += '<option value="' + opt + '">' + opt + '</option>';
+            
+        }
+
+        for (var optn of data.optns) {
+          opt1 += '<option value="' + optn + '">' + optn + '</option>';
+        }
+
+        for (var mat of data.Mat_) {
+          opt2 += '<option value="' + mat + '">' + mat + '</option>';
+        }
+
+        ULA_select.innerHTML    = opt0;
+        option_select.innerHTML = opt1;
+        mdates_select.innerHTML   = opt2;
+      })
+
+    });
+  </script>
+
+
+<script>
+  // Second form to Table shown
+  document.getElementById('secondform').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get the input values from the form
+    var ULAs = [];
+    var options = this.options;
+
+    for (i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.selected) {ULAs.push(option.value);      }    }
+    
+    const baseUrl = '/datatotable/';
+    const url = `${baseUrl}${encodeURIComponent(ULAs)}`;
+
+    fetch(url).then(response => response.json()).then(data => {
+      const columns = Object.keys(data.body[0]);
+      const tableHeader = columns.map(column => `<th scope="col">${column}</th>`).join('');
+
+      // Create the table body dynamically
+      const tableRows = data.body.map(rowData => {
+        const row = columns.map(column => `<td>${rowData[column]}</td>`).join('');
+        return `<tr>${row}</tr>`;
+      }).join('');
+
+      const tableHTML = `
+        <thead>
+          <tr>${tableHeader}</tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      `;
+
+      // Set the table HTML inside the table with ID 'myTable'
+      document.getElementById('myTable').innerHTML = tableHTML;
+
+      const columns1 = Object.keys(data.help[0]);
+      const tableHeader1 = columns1.map(columnt => `<th scope="col">${columnt}</th>`).join('');
+
+      // Create the table body dynamically
+      const tableRows1 = data.help.map(rowData1 => {
+        const row2 = columns1.map(column2 => `<td>${rowData1[column2]}</td>`).join('');
+        return `<tr>${row2}</tr>`;
+      }).join('');
+
+      const tableHTML2 = `
+        <thead>
+          <tr>${tableHeader1}</tr>
+        </thead>
+        <tbody>
+          ${tableRows1}
+        </tbody>
+      `;
+
+      // Set the table HTML inside the table with ID 'myTable'
+      document.getElementById('data-table').innerHTML = tableHTML2;
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+// Set the table HTML inside the table with ID 'myTable'
+
+const dataRows = document.querySelectorAll("#data-table tbody tr");
+      const dataQ = Array.from(dataRows).map((row) => {
+        const xValueQ = parseFloat(row.cells[1].textContent);
+        const yValueQ = parseFloat(row.cells[2].textContent);
+        const labelQ = row.cells[0].textContent;
+        return { x: xValueQ, y: yValueQ, name: labelQ };
+      });
+    
+      // Create the scatter plot
+      Highcharts.chart("scatter-chart-container", {
+        chart:   {  type: "scatter",       zoomType: 'xy' },
+        legend:  {enabled: false,},
+        title:   {  text: "Max. Annual Return vs. Days to Maturity",                 },
+        xAxis:   {  title: {     text: "Days to Maturity",          },        },
+        yAxis:   {  title: {     text: "Max. Annual Return (%)",    },        },
+        plotOptions: {
+                        scatter: {  marker:  {    enabled: true,    radius: 10   },
+                                    tooltip: {    headerFormat: '<b>{point.name}</b><br/>',
+                                                  pointFormat: '{point.name}: ({point.x}, {point.y})'}  } },
+          series: [  {     data: dataQ,     },     ],
+      });
+
+
+
+
+
+                                                          })        })
+</script>
+  
+
+
+
+  
+
+
