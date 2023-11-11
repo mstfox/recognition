@@ -4,7 +4,6 @@ requests
 pandas
 xmltodict
 datetime
-json
 pathlib
 jdatetime
 numpy
